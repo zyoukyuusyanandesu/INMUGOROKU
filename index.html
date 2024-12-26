@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="ja">
+    <h1 style="color:#631749">ランダム淫夢マン</h1>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>淫夢語録をしゃべらせる</title>
+  <style>
+    body {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      background-color: #ffc2d7; /* 淫夢っぽい色 (茶色系) */
+      font-family: 'Arial', sans-serif;
+    }
+
+    #quote {
+      font-size: 24px;
+      font-weight: bold;
+      margin-bottom: 20px;
+      color: #FFF;
+      text-align: center;
+      max-width: 80%;
+      position: relative;
+      background-color: rgba(0, 0, 0, 0.7);
+      padding: 20px;
+      border-radius: 15px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    }
+
+    #quote:before {
+      content: '';
+      position: absolute;
+      left: 50%;
+      top: -10px;
+      margin-left: -10px;
+      border-width: 10px;
+      border-style: solid;
+      border-color: transparent transparent #000 transparent;
+    }
+
+    #talkingImage {
+      max-width: 80%;
+      max-height: 60%;
+      border: 5px solid #ffffff;
+      cursor: pointer;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    }
+
+    #instructions {
+      margin-top: 10px;
+      font-size: 16px;
+      color: #fff;
+    }
+  </style>
+</head>
+<body>
+  <div id="quote">画像をクリックして喋らせてください</div>
+  <img 
+    src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTdBtkngK7w8oWTg9R4EX1Ewcoku9PmCHtDMA&s" 
+    alt="クリックでしゃべる画像" 
+    id="talkingImage">
+  <div id="instructions">（喋るたびにランダムなセリフが表示されます）</div>
+
+  <script>
+    // 淫夢語録リスト
+    const quotes = [
+      "いい素材やこれは",
+      "うん、おいしい！",
+      "聞いていません",
+      "さあ、料理人解体ショーの始まりや",
+      "冗談はよしてくれ",
+      "中野くんはハゲみたいなもんやし",
+      "中野くんもうまそうやな～ホンマ",
+      "やっぱ・・・中野くんの・・・料理を・・・最高やな！",
+      "よし！（適当）",
+      "よろしくお願いさしすせそ"
+    ];
+
+    // 画像クリックで語録をランダムに選んで読み上げ
+    document.getElementById('talkingImage').addEventListener('click', () => {
+      const randomQuote = quotes[Math.floor(Math.random() * quotes.length)];
+
+      // 表示する言葉を更新
+      document.getElementById('quote').textContent = randomQuote;
+
+      // Web Speech APIを使用してテキストを読み上げ
+      const utterance = new SpeechSynthesisUtterance(randomQuote);
+      utterance.lang = 'ja-JP'; // 日本語で読み上げ
+
+      // 男性の声を選択（利用可能な場合）
+      const voices = speechSynthesis.getVoices();
+      const maleVoice = voices.find(voice => voice.lang === 'ja-JP' && voice.name.includes('男性'));
+      if (maleVoice) {
+        utterance.voice = maleVoice;
+      }
+
+      speechSynthesis.speak(utterance);
+
+      console.log(`しゃべった内容: ${randomQuote}`); // デバッグ用
+    });
+
+    // 声のリストを取得してキャッシュ（ブラウザの仕様対策）
+    speechSynthesis.onvoiceschanged = () => {
+      speechSynthesis.getVoices();
+    };
+  </script>
+</body>
+</html>
